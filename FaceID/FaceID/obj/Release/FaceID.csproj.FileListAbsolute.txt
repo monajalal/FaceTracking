@@ -1,0 +1,13 @@
+C:\Users\Mona\Downloads\FaceID\FaceID\FaceID\bin\Release\FaceID.exe.config
+C:\Users\Mona\Downloads\FaceID\FaceID\FaceID\bin\Release\FaceID.exe
+C:\Users\Mona\Downloads\FaceID\FaceID\FaceID\bin\Release\FaceID.pdb
+C:\Users\Mona\Downloads\FaceID\FaceID\FaceID\bin\Release\libpxcclr.cs.dll
+C:\Users\Mona\Downloads\FaceID\FaceID\FaceID\obj\Release\MainWindow.baml
+C:\Users\Mona\Downloads\FaceID\FaceID\FaceID\obj\Release\MainWindow.g.cs
+C:\Users\Mona\Downloads\FaceID\FaceID\FaceID\obj\Release\App.g.cs
+C:\Users\Mona\Downloads\FaceID\FaceID\FaceID\obj\Release\FaceID_MarkupCompile.cache
+C:\Users\Mona\Downloads\FaceID\FaceID\FaceID\obj\Release\FaceID.g.resources
+C:\Users\Mona\Downloads\FaceID\FaceID\FaceID\obj\Release\FaceID.Properties.Resources.resources
+C:\Users\Mona\Downloads\FaceID\FaceID\FaceID\obj\Release\FaceID.csproj.GenerateResource.Cache
+C:\Users\Mona\Downloads\FaceID\FaceID\FaceID\obj\Release\FaceID.exe
+C:\Users\Mona\Downloads\FaceID\FaceID\FaceID\obj\Release\FaceID.pdb

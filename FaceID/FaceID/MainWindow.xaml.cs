@@ -14,12 +14,14 @@
 // responsibility to update it.
 //--------------------------------------------------------------------------------------
 using System;
+using System.Text;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Threading;
 using System.Drawing;
 using System.Windows.Controls;
 using System.IO;
+using FaceExpression = PXCMFaceData.ExpressionsData.FaceExpression;
 
 namespace FaceID
 {
@@ -48,9 +50,15 @@ namespace FaceID
         private int faceRectangleX;
         private int faceRectangleY;
         private int eyesUp; //eyes up score
+        private Boolean eyeIsUP; //checking to see if eye is up with a threshold
         private double yaw;
         private double pitch;
         private double roll;
+        //private string fileName = System.IO.Path.GetRandomFileName();
+        private string fileName = "results.txt";
+        private string filePath = Directory.GetCurrentDirectory();
+        string pathString;
+        
 
 
 
@@ -64,6 +72,20 @@ namespace FaceID
             dbState = string.Empty;
             doRegister = false;
             doUnregister = false;
+            pathString  = System.IO.Path.Combine(filePath, fileName);
+            System.IO.File.WriteAllText(pathString, string.Empty);
+            File.WriteAllText(pathString, "Timestamp,roll,pitch, yaw, eyes_up\r\n" + File.ReadAllText(pathString));
+            /*
+            string[] lines = System.IO.File.ReadAllLines(pathString);
+            foreach (string line in lines)
+            {
+                if (line==lines[0])
+                    System.IO.File.WriteAllText(pathString,"Timestamp,roll,pitch, yaw, eyes_up");
+            }
+            */
+
+
+
 
             // Start SenseManage and configure the face module
             ConfigureRealSense();
@@ -83,7 +105,7 @@ namespace FaceID
             senseManager = PXCMSenseManager.CreateInstance();
 
             // Enable the color stream
-            senseManager.EnableStream(PXCMCapture.StreamType.STREAM_TYPE_COLOR, 640, 480, 30);
+            senseManager.EnableStream(PXCMCapture.StreamType.STREAM_TYPE_COLOR, 640, 480, 60);
 
             // Enable the face module
             senseManager.EnableFace();
@@ -131,6 +153,24 @@ namespace FaceID
             faceModule.Dispose();
          }
 
+
+        private int GetFaceExpressionIntensity(PXCMFaceData.ExpressionsData data, FaceExpression faceExpression)
+        {
+            PXCMFaceData.ExpressionsData.FaceExpressionResult score;
+            data.QueryExpression(faceExpression, out score);
+            //if (score.intensity > 0) Debug.WriteLine(faceExpression + ":" +score.intensity);
+            return score.intensity;
+        }
+
+
+        private bool CheckFaceExpression(PXCMFaceData.ExpressionsData data, FaceExpression faceExpression, int threshold)
+        {
+            return GetFaceExpressionIntensity(data, faceExpression) > threshold;
+        }
+
+
+
+
         private void ProcessingThread()
         {
             // Start AcquireFrame/ReleaseFrame loop
@@ -169,6 +209,19 @@ namespace FaceID
                        PXCMFaceData.ExpressionsData.FaceExpressionResult eyesUpScore;
                        edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_EYES_UP, out eyesUpScore);
                        eyesUp = eyesUpScore.intensity;
+                       PXCMCapture.Device device = senseManager.captureManager.device;
+                       device.SetIVCAMAccuracy(PXCMCapture.Device.IVCAMAccuracy.IVCAM_ACCURACY_FINEST);
+                       eyeIsUP= CheckFaceExpression(edata, FaceExpression.EXPRESSION_EYES_UP, 15);
+                       
+                       var csv = new StringBuilder();
+                         // outputs 10:00 PM
+                       var newLine = string.Format("{0},{1},{2},{3},{4}{5}", DateTime.Now.ToString("dd-MM-yyyy-hh:mm:ss:fff"), roll, pitch, yaw, eyesUp, Environment.NewLine);
+                       csv.Append(newLine);
+                      // string pathString = System.IO.Path.Combine(filePath, fileName);
+
+                       File.AppendAllText(pathString, csv.ToString());
+
+                      
 
 
                         // Retrieve face location data
@@ -182,6 +235,7 @@ namespace FaceID
                             faceRectangleX = faceRectangle.x;
                             faceRectangleY = faceRectangle.y;
                         }
+
 
                         // Process face recognition data
                         if (face != null)
@@ -252,6 +306,7 @@ namespace FaceID
                 lblUserId.Content = String.Format("User ID: {0}", userId);
                 lblDatabaseState.Content = String.Format("Database: {0}", dbState);
                 lblExpression.Content = string.Format("Eyes Up: {0}", eyesUp);
+                lblExpressionThreshold.Content = string.Format("Eyes UP W threshold:{0}", eyeIsUP);
                 lblYaw.Content = string.Format("Yaw: {0}", yaw);
                 lblPitch.Content = string.Format("Pitch: {0}", pitch);
                 lblRoll.Content = string.Format("Roll: {0}", roll);

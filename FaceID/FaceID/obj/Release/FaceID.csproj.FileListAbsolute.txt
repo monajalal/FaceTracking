@@ -11,3 +11,4 @@ C:\Users\Mona\Downloads\FaceID\FaceID\FaceID\obj\Release\FaceID.Properties.Resou
 C:\Users\Mona\Downloads\FaceID\FaceID\FaceID\obj\Release\FaceID.csproj.GenerateResource.Cache
 C:\Users\Mona\Downloads\FaceID\FaceID\FaceID\obj\Release\FaceID.exe
 C:\Users\Mona\Downloads\FaceID\FaceID\FaceID\obj\Release\FaceID.pdb
+C:\Users\Mona\Downloads\FaceID\FaceID\FaceID\obj\Release\FaceID.csprojResolveAssemblyReference.cache

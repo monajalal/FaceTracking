@@ -21,6 +21,8 @@
                 <Label x:Name="lblDatabaseState" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
 
                 <Label x:Name="lblExpression" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
+                <Label x:Name="lblExpressionThreshold" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
+
                 <Label x:Name="lblRoll" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
                 <Label x:Name="lblPitch" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
                 <Label x:Name="lblYaw" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>

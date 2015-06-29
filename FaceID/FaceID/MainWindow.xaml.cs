@@ -103,9 +103,17 @@ namespace FaceID
             
             // Start the SenseManager and session  
             senseManager = PXCMSenseManager.CreateInstance();
+            senseManager.captureManager.SetFileName("recorded_video.wm", true);
+            senseManager.EnableStream(PXCMCapture.StreamType.STREAM_TYPE_COLOR, 640, 480, 0);
+            
+            senseManager.Init();
+
+            senseManager.captureManager.SetRealtime(false);
+            senseManager.captureManager.SetPause(true);
 
             // Enable the color stream
-            senseManager.EnableStream(PXCMCapture.StreamType.STREAM_TYPE_COLOR, 640, 480, 60);
+            //senseManager.EnableStream(PXCMCapture.StreamType.STREAM_TYPE_COLOR, 640, 480, 60);
+            //60 0r 0 for fps?
 
             // Enable the face module
             senseManager.EnableFace();

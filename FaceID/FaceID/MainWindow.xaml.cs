@@ -50,7 +50,9 @@ namespace FaceID
         private int faceRectangleX;
         private int faceRectangleY;
         private int eyesUp; //eyes up score
+        private int headTiltLeft;
         private Boolean eyeIsUP; //checking to see if eye is up with a threshold
+        private Boolean headTiltLeftThreshold; //checking to see if head is tilted left
         private double yaw;
         private double pitch;
         private double roll;
@@ -215,11 +217,17 @@ namespace FaceID
                        PXCMFaceData.ExpressionsData edata = face.QueryExpressions();
                        // retrieve the expression information
                        PXCMFaceData.ExpressionsData.FaceExpressionResult eyesUpScore;
+                       PXCMFaceData.ExpressionsData.FaceExpressionResult headTiltedLeftScore;
                        edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_EYES_UP, out eyesUpScore);
+                       edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_HEAD_TILT_LEFT, out headTiltedLeftScore);
                        eyesUp = eyesUpScore.intensity;
+                       headTiltLeft = headTiltedLeftScore.intensity;
                        PXCMCapture.Device device = senseManager.captureManager.device;
                        device.SetIVCAMAccuracy(PXCMCapture.Device.IVCAMAccuracy.IVCAM_ACCURACY_FINEST);
                        eyeIsUP= CheckFaceExpression(edata, FaceExpression.EXPRESSION_EYES_UP, 15);
+                      
+                       headTiltLeftThreshold = CheckFaceExpression(edata, FaceExpression.EXPRESSION_HEAD_TILT_LEFT, 15);
+
                        
                        var csv = new StringBuilder();
                          // outputs 10:00 PM
@@ -315,6 +323,8 @@ namespace FaceID
                 lblDatabaseState.Content = String.Format("Database: {0}", dbState);
                 lblExpression.Content = string.Format("Eyes Up: {0}", eyesUp);
                 lblExpressionThreshold.Content = string.Format("Eyes UP W threshold:{0}", eyeIsUP);
+                lblHeadTilt.Content = string.Format("Head Tilted Left:{0}", headTiltLeft);
+                lblHeadThreshold.Content = string.Format("Head Tilted Left:{0}", headTiltLeftThreshold);
                 lblYaw.Content = string.Format("Yaw: {0}", yaw);
                 lblPitch.Content = string.Format("Pitch: {0}", pitch);
                 lblRoll.Content = string.Format("Roll: {0}", roll);

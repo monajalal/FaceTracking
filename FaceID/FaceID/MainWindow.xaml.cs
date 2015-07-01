@@ -208,14 +208,18 @@ namespace FaceID
                         PXCMFaceData.Face face = faceData.QueryFaceByIndex(0);
                         face.QueryExpressions();
                         PXCMFaceData.PoseData poseData = face.QueryPose();
-                        PXCMPoint3DF32 outHeadPosition = new PXCMPoint3DF32();
+                      //  PXCMPoint3DF32 outHeadPosition = new PXCMPoint3DF32(); //F200 has added confidence into struct
+                        PXCMFaceData.HeadPosition outHeadPosition = new PXCMFaceData.HeadPosition();
+
+                       poseData.QueryHeadPosition(out outHeadPosition);
+                       Console.WriteLine("Out head position" + outHeadPosition.confidence);
                        // poseData.QueryHeadPosition(out outHeadPosition);
                        PXCMFaceData.PoseEulerAngles outPoseEulerAngles = new PXCMFaceData.PoseEulerAngles();
 				       poseData.QueryPoseAngles(out outPoseEulerAngles);
                        roll = outPoseEulerAngles.roll;
                        pitch = outPoseEulerAngles.pitch;
                        yaw = outPoseEulerAngles.yaw;
-				       Console.WriteLine("Rotation: " + outPoseEulerAngles.roll + " " + outPoseEulerAngles.pitch + " " + outPoseEulerAngles.yaw);
+				       //Console.WriteLine("Rotation: " + outPoseEulerAngles.roll + " " + outPoseEulerAngles.pitch + " " + outPoseEulerAngles.yaw);
                        PXCMFaceData.ExpressionsData edata = face.QueryExpressions();
                        // retrieve the expression information
                       // PXCMFaceData.ExpressionsData.FaceExpressionResult eyesUpScore;

@@ -21,6 +21,7 @@ using System.Threading;
 using System.Drawing;
 using System.Windows.Controls;
 using System.IO;
+
 using FaceExpression = PXCMFaceData.ExpressionsData.FaceExpression;
 
 namespace FaceID
@@ -50,7 +51,9 @@ namespace FaceID
         private int faceRectangleX;
         private int faceRectangleY;
         //private int eyesUp; //eyes up score
+        private int eyesTurnLeft;
         private int headUp; //check to see if head is up
+        private int headDown; //check to see if head is down
         private int headTiltLeft;
         private int headTurnLeft; //checking to see if user is turning his head left
         private Boolean eyeIsUP; //checking to see if eye is up with a threshold
@@ -205,14 +208,19 @@ namespace FaceID
                     {
                         
                         // Get the first face detected (index 0)
-                        PXCMFaceData.Face face = faceData.QueryFaceByIndex(0);
+                       PXCMFaceData.Face face = faceData.QueryFaceByIndex(0);
                         face.QueryExpressions();
-                        PXCMFaceData.PoseData poseData = face.QueryPose();
+                       PXCMFaceData.PoseData poseData = face.QueryPose();
                       //  PXCMPoint3DF32 outHeadPosition = new PXCMPoint3DF32(); //F200 has added confidence into struct
-                        PXCMFaceData.HeadPosition outHeadPosition = new PXCMFaceData.HeadPosition();
-
+                       PXCMFaceData.HeadPosition outHeadPosition = new PXCMFaceData.HeadPosition();
+                       
+                       //processing the head pose data to find the head center position
                        poseData.QueryHeadPosition(out outHeadPosition);
-                       Console.WriteLine("Out head position" + outHeadPosition.confidence);
+                       System.Windows.Media.Media3D.Point3DCollection points = new System.Windows.Media.Media3D.Point3DCollection();
+                       points.Add(new System.Windows.Media.Media3D.Point3D(outHeadPosition.headCenter.x,
+                                  outHeadPosition.headCenter.y, outHeadPosition.headCenter.z));
+
+                       Console.WriteLine("head center position: " + points);
                        // poseData.QueryHeadPosition(out outHeadPosition);
                        PXCMFaceData.PoseEulerAngles outPoseEulerAngles = new PXCMFaceData.PoseEulerAngles();
 				       poseData.QueryPoseAngles(out outPoseEulerAngles);
@@ -223,17 +231,23 @@ namespace FaceID
                        PXCMFaceData.ExpressionsData edata = face.QueryExpressions();
                        // retrieve the expression information
                       // PXCMFaceData.ExpressionsData.FaceExpressionResult eyesUpScore;
+                       PXCMFaceData.ExpressionsData.FaceExpressionResult eyesTurnLeftScore;
                        PXCMFaceData.ExpressionsData.FaceExpressionResult headTiltedLeftScore;
                        PXCMFaceData.ExpressionsData.FaceExpressionResult headTurnedLeftScore;
                        PXCMFaceData.ExpressionsData.FaceExpressionResult headUpScore;
+                       PXCMFaceData.ExpressionsData.FaceExpressionResult headDownScore;
                        //edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_EYES_UP, out eyesUpScore);
+                       edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_EYES_TURN_LEFT, out eyesTurnLeftScore);
                        edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_HEAD_TILT_LEFT, out headTiltedLeftScore);
                        edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_HEAD_TURN_LEFT, out headTurnedLeftScore);
                        edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_HEAD_UP, out headUpScore);
+                       edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_HEAD_DOWN, out headDownScore);
                       // eyesUp = eyesUpScore.intensity;
+                       eyesTurnLeft = eyesTurnLeftScore.intensity;
                        headTiltLeft = headTiltedLeftScore.intensity;
                        headTurnLeft= headTurnedLeftScore.intensity;
                        headUp = headUpScore.intensity;
+                       headDown = headDownScore.intensity;
                        PXCMCapture.Device device = senseManager.captureManager.device;
                        device.SetIVCAMAccuracy(PXCMCapture.Device.IVCAMAccuracy.IVCAM_ACCURACY_FINEST);
                        eyeIsUP= CheckFaceExpression(edata, FaceExpression.EXPRESSION_EYES_UP, 15);
@@ -334,10 +348,12 @@ namespace FaceID
                 lblUserId.Content = String.Format("User ID: {0}", userId);
                 lblDatabaseState.Content = String.Format("Database: {0}", dbState);
                // lblExpression.Content = string.Format("Eyes Up: {0}", eyesUp);
+                lblEyesTurnLeft.Content = string.Format("Eyes turn left:{0}", eyesTurnLeft);
                 lblExpressionThreshold.Content = string.Format("Eyes UP W threshold:{0}", eyeIsUP);
                 lblHeadTilt.Content = string.Format("Head Tilted Left:{0}", headTiltLeft);
                 lblHeadThreshold.Content = string.Format("Head Tilted Left:{0}", headTiltLeftThreshold);
                 lblHeadUp.Content = string.Format("Head Up:{0}", headUp);
+                lblHeadDown.Content = string.Format("Head Down:{0}", headDown);
                 lblHeadTurnedLeft.Content = string.Format("Head Turned Left:{0}", headTurnLeft);
                 lblYaw.Content = string.Format("Yaw: {0}", yaw);
                 lblPitch.Content = string.Format("Pitch: {0}", pitch);

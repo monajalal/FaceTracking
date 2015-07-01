@@ -49,8 +49,10 @@ namespace FaceID
         private int faceRectangleWidth;
         private int faceRectangleX;
         private int faceRectangleY;
-        private int eyesUp; //eyes up score
+        //private int eyesUp; //eyes up score
+        private int headUp; //check to see if head is up
         private int headTiltLeft;
+        private int headTurnLeft; //checking to see if user is turning his head left
         private Boolean eyeIsUP; //checking to see if eye is up with a threshold
         private Boolean headTiltLeftThreshold; //checking to see if head is tilted left
         private double yaw;
@@ -216,26 +218,32 @@ namespace FaceID
 				       Console.WriteLine("Rotation: " + outPoseEulerAngles.roll + " " + outPoseEulerAngles.pitch + " " + outPoseEulerAngles.yaw);
                        PXCMFaceData.ExpressionsData edata = face.QueryExpressions();
                        // retrieve the expression information
-                       PXCMFaceData.ExpressionsData.FaceExpressionResult eyesUpScore;
+                      // PXCMFaceData.ExpressionsData.FaceExpressionResult eyesUpScore;
                        PXCMFaceData.ExpressionsData.FaceExpressionResult headTiltedLeftScore;
-                       edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_EYES_UP, out eyesUpScore);
+                       PXCMFaceData.ExpressionsData.FaceExpressionResult headTurnedLeftScore;
+                       PXCMFaceData.ExpressionsData.FaceExpressionResult headUpScore;
+                       //edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_EYES_UP, out eyesUpScore);
                        edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_HEAD_TILT_LEFT, out headTiltedLeftScore);
-                       eyesUp = eyesUpScore.intensity;
+                       edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_HEAD_TURN_LEFT, out headTurnedLeftScore);
+                       edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_HEAD_UP, out headUpScore);
+                      // eyesUp = eyesUpScore.intensity;
                        headTiltLeft = headTiltedLeftScore.intensity;
+                       headTurnLeft= headTurnedLeftScore.intensity;
+                       headUp = headUpScore.intensity;
                        PXCMCapture.Device device = senseManager.captureManager.device;
                        device.SetIVCAMAccuracy(PXCMCapture.Device.IVCAMAccuracy.IVCAM_ACCURACY_FINEST);
                        eyeIsUP= CheckFaceExpression(edata, FaceExpression.EXPRESSION_EYES_UP, 15);
                       
                        headTiltLeftThreshold = CheckFaceExpression(edata, FaceExpression.EXPRESSION_HEAD_TILT_LEFT, 15);
 
-                       
-                       var csv = new StringBuilder();
+                       //csv mona
+                      // var csv = new StringBuilder();
                          // outputs 10:00 PM
-                       var newLine = string.Format("{0},{1},{2},{3},{4}{5}", DateTime.Now.ToString("dd-MM-yyyy-hh:mm:ss:fff"), roll, pitch, yaw, eyesUp, Environment.NewLine);
-                       csv.Append(newLine);
+                   //    var newLine = string.Format("{0},{1},{2},{3},{4}{5}", DateTime.Now.ToString("dd-MM-yyyy-hh:mm:ss:fff"), roll, pitch, yaw, eyesUp, Environment.NewLine);
+                  //     csv.Append(newLine);
                       // string pathString = System.IO.Path.Combine(filePath, fileName);
 
-                       File.AppendAllText(pathString, csv.ToString());
+                    //   File.AppendAllText(pathString, csv.ToString());
 
                       
 
@@ -321,10 +329,12 @@ namespace FaceID
                 lblNumFacesDetected.Content = String.Format("Faces Detected: {0}", numFacesDetected);
                 lblUserId.Content = String.Format("User ID: {0}", userId);
                 lblDatabaseState.Content = String.Format("Database: {0}", dbState);
-                lblExpression.Content = string.Format("Eyes Up: {0}", eyesUp);
+               // lblExpression.Content = string.Format("Eyes Up: {0}", eyesUp);
                 lblExpressionThreshold.Content = string.Format("Eyes UP W threshold:{0}", eyeIsUP);
                 lblHeadTilt.Content = string.Format("Head Tilted Left:{0}", headTiltLeft);
                 lblHeadThreshold.Content = string.Format("Head Tilted Left:{0}", headTiltLeftThreshold);
+                lblHeadUp.Content = string.Format("Head Up:{0}", headUp);
+                lblHeadTurnedLeft.Content = string.Format("Head Turned Left:{0}", headTurnLeft);
                 lblYaw.Content = string.Format("Yaw: {0}", yaw);
                 lblPitch.Content = string.Format("Pitch: {0}", pitch);
                 lblRoll.Content = string.Format("Roll: {0}", roll);

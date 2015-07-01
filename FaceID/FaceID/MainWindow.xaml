@@ -20,11 +20,11 @@
                 <Label x:Name="lblNumFacesDetected" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
                 <Label x:Name="lblDatabaseState" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
 
-                <Label x:Name="lblExpression" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
                 <Label x:Name="lblExpressionThreshold" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
                 <Label x:Name="lblHeadTilt" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
                 <Label x:Name="lblHeadThreshold" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
-
+                <Label x:Name="lblHeadTurnedLeft" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
+                <Label x:Name="lblHeadUp" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
                 <Label x:Name="lblRoll" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
                 <Label x:Name="lblPitch" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
                 <Label x:Name="lblYaw" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>

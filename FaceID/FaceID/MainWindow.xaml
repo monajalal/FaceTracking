@@ -19,8 +19,10 @@
                 <Label x:Name="lblUserId" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
                 <Label x:Name="lblNumFacesDetected" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
                 <Label x:Name="lblDatabaseState" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
-                <Label x:Name="lblEyesTurnLeft" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
+                <Label x:Name="lblSmile" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
 
+                <Label x:Name="lblEyesTurnLeft" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
+ 
                 <Label x:Name="lblExpressionThreshold" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
                 <Label x:Name="lblHeadTilt" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
                 <Label x:Name="lblHeadThreshold" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>

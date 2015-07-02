@@ -50,6 +50,7 @@ namespace FaceID
         private int faceRectangleWidth;
         private int faceRectangleX;
         private int faceRectangleY;
+        private int smile;
         //private int eyesUp; //eyes up score
         private int eyesTurnLeft;
         private int headUp; //check to see if head is up
@@ -230,19 +231,22 @@ namespace FaceID
 				       //Console.WriteLine("Rotation: " + outPoseEulerAngles.roll + " " + outPoseEulerAngles.pitch + " " + outPoseEulerAngles.yaw);
                        PXCMFaceData.ExpressionsData edata = face.QueryExpressions();
                        // retrieve the expression information
+                       PXCMFaceData.ExpressionsData.FaceExpressionResult smileScore;
                       // PXCMFaceData.ExpressionsData.FaceExpressionResult eyesUpScore;
                        PXCMFaceData.ExpressionsData.FaceExpressionResult eyesTurnLeftScore;
                        PXCMFaceData.ExpressionsData.FaceExpressionResult headTiltedLeftScore;
                        PXCMFaceData.ExpressionsData.FaceExpressionResult headTurnedLeftScore;
                        PXCMFaceData.ExpressionsData.FaceExpressionResult headUpScore;
                        PXCMFaceData.ExpressionsData.FaceExpressionResult headDownScore;
+                       edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_SMILE, out smileScore);
                        //edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_EYES_UP, out eyesUpScore);
                        edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_EYES_TURN_LEFT, out eyesTurnLeftScore);
                        edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_HEAD_TILT_LEFT, out headTiltedLeftScore);
                        edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_HEAD_TURN_LEFT, out headTurnedLeftScore);
                        edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_HEAD_UP, out headUpScore);
                        edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_HEAD_DOWN, out headDownScore);
-                      // eyesUp = eyesUpScore.intensity;
+                       smile = smileScore.intensity;
+                       // eyesUp = eyesUpScore.intensity;
                        eyesTurnLeft = eyesTurnLeftScore.intensity;
                        headTiltLeft = headTiltedLeftScore.intensity;
                        headTurnLeft= headTurnedLeftScore.intensity;
@@ -347,6 +351,7 @@ namespace FaceID
                 lblNumFacesDetected.Content = String.Format("Faces Detected: {0}", numFacesDetected);
                 lblUserId.Content = String.Format("User ID: {0}", userId);
                 lblDatabaseState.Content = String.Format("Database: {0}", dbState);
+                lblSmile.Content = string.Format("smiling:{0}", smile);
                // lblExpression.Content = string.Format("Eyes Up: {0}", eyesUp);
                 lblEyesTurnLeft.Content = string.Format("Eyes turn left:{0}", eyesTurnLeft);
                 lblExpressionThreshold.Content = string.Format("Eyes UP W threshold:{0}", eyeIsUP);

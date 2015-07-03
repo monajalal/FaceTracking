@@ -59,9 +59,9 @@ namespace FaceID
         private int headTurnLeft; //checking to see if user is turning his head left
         private Boolean eyeIsUP; //checking to see if eye is up with a threshold
         private Boolean headTiltLeftThreshold; //checking to see if head is tilted left
-        private double yaw;
-        private double pitch;
-        private double roll;
+        private int yaw;
+        private int pitch;
+        private int roll;
         //private string fileName = System.IO.Path.GetRandomFileName();
         private string fileName = "results.txt";
         private string filePath = Directory.GetCurrentDirectory();
@@ -225,9 +225,18 @@ namespace FaceID
                        // poseData.QueryHeadPosition(out outHeadPosition);
                        PXCMFaceData.PoseEulerAngles outPoseEulerAngles = new PXCMFaceData.PoseEulerAngles();
 				       poseData.QueryPoseAngles(out outPoseEulerAngles);
-                       roll = outPoseEulerAngles.roll;
-                       pitch = outPoseEulerAngles.pitch;
-                       yaw = outPoseEulerAngles.yaw;
+                       roll = (int) outPoseEulerAngles.roll;
+                       pitch = (int) outPoseEulerAngles.pitch;
+                       yaw = (int) outPoseEulerAngles.yaw;
+                       // PXCMFaceData.LandmarkType.LANDMARK_EYE_LEFT_CENTER what can I do with this?
+                       if (pitch + 12 > 10)
+                           headUp = 1;
+                       else
+                           headUp = 0;
+                       if (pitch < -10)
+                           headDown = 1;
+                       else
+                           headDown = 0;
 				       //Console.WriteLine("Rotation: " + outPoseEulerAngles.roll + " " + outPoseEulerAngles.pitch + " " + outPoseEulerAngles.yaw);
                        PXCMFaceData.ExpressionsData edata = face.QueryExpressions();
                        // retrieve the expression information
@@ -236,22 +245,22 @@ namespace FaceID
                        PXCMFaceData.ExpressionsData.FaceExpressionResult eyesTurnLeftScore;
                        PXCMFaceData.ExpressionsData.FaceExpressionResult headTiltedLeftScore;
                        PXCMFaceData.ExpressionsData.FaceExpressionResult headTurnedLeftScore;
-                       PXCMFaceData.ExpressionsData.FaceExpressionResult headUpScore;
-                       PXCMFaceData.ExpressionsData.FaceExpressionResult headDownScore;
+                      // PXCMFaceData.ExpressionsData.FaceExpressionResult headUpScore;
+                       //PXCMFaceData.ExpressionsData.FaceExpressionResult headDownScore;
                        edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_SMILE, out smileScore);
                        //edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_EYES_UP, out eyesUpScore);
                        edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_EYES_TURN_LEFT, out eyesTurnLeftScore);
                        edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_HEAD_TILT_LEFT, out headTiltedLeftScore);
                        edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_HEAD_TURN_LEFT, out headTurnedLeftScore);
-                       edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_HEAD_UP, out headUpScore);
-                       edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_HEAD_DOWN, out headDownScore);
+                      // edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_HEAD_UP, out headUpScore);
+                       //edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_HEAD_DOWN, out headDownScore);
                        smile = smileScore.intensity;
                        // eyesUp = eyesUpScore.intensity;
                        eyesTurnLeft = eyesTurnLeftScore.intensity;
                        headTiltLeft = headTiltedLeftScore.intensity;
                        headTurnLeft= headTurnedLeftScore.intensity;
-                       headUp = headUpScore.intensity;
-                       headDown = headDownScore.intensity;
+                      // headUp = headUpScore.intensity;
+                       //headDown = headDownScore.intensity;
                        PXCMCapture.Device device = senseManager.captureManager.device;
                        device.SetIVCAMAccuracy(PXCMCapture.Device.IVCAMAccuracy.IVCAM_ACCURACY_FINEST);
                        eyeIsUP= CheckFaceExpression(edata, FaceExpression.EXPRESSION_EYES_UP, 15);

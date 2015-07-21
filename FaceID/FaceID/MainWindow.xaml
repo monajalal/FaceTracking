@@ -20,13 +20,18 @@
                 <Label x:Name="lblNumFacesDetected" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
                 <Label x:Name="lblDatabaseState" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
                 <Label x:Name="lblSmile" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
+                <Label x:Name="lblLooksForward" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
+                <Label x:Name="lblEyesUp" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
+                <Label x:Name="lblEyesDown" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
 
                 <Label x:Name="lblEyesTurnLeft" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
- 
-                <Label x:Name="lblExpressionThreshold" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
-                <Label x:Name="lblHeadTilt" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
-                <Label x:Name="lblHeadThreshold" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
+                <Label x:Name="lblEyesTurnRight" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
+
+                <Label x:Name="lblHeadTiltLeft" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
+                <Label x:Name="lblHeadTiltRight" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
                 <Label x:Name="lblHeadTurnedLeft" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
+                <Label x:Name="lblHeadTurnedRight" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
+
                 <Label x:Name="lblHeadDown" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
                 <Label x:Name="lblHeadUp" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>
                 <Label x:Name="lblRoll" Content="-" FontSize="18" Foreground="White" HorizontalAlignment="Center"/>

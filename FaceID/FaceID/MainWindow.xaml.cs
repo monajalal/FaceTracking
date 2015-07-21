@@ -51,13 +51,20 @@ namespace FaceID
         private int faceRectangleX;
         private int faceRectangleY;
         private int smile;
-        //private int eyesUp; //eyes up score
+        private int eyesUp; //eyes up score
+        private int eyesDown;
+     
         private int eyesTurnLeft;
-        private int headUp; //check to see if head is up
-        private int headDown; //check to see if head is down
-        private int headTiltLeft;
-        private int headTurnLeft; //checking to see if user is turning his head left
-        private Boolean eyeIsUP; //checking to see if eye is up with a threshold
+        private int eyesTurnRight; 
+        private Boolean looksForward;
+        private Boolean headUp; //check to see if head is up
+        private Boolean headDown; //check to see if head is down
+        private Boolean headTiltLeft;
+        private Boolean headTiltRight;
+        private Boolean headTurnLeft; //checking to see if user is turning his head left
+        private Boolean headTurnRight; //checking to see if user is turning his head right
+        private Boolean eyeIsUp; //checking to see if eye is up with a threshold
+        private Boolean eyeIsDown;
         private Boolean headTiltLeftThreshold; //checking to see if head is tilted left
         private int yaw;
         private int pitch;
@@ -230,42 +237,87 @@ namespace FaceID
                        yaw = (int) outPoseEulerAngles.yaw;
                        // PXCMFaceData.LandmarkType.LANDMARK_EYE_LEFT_CENTER what can I do with this?
                        if (pitch + 12 > 10)
-                           headUp = 1;
+                           headUp = true;
                        else
-                           headUp = 0;
+                           headUp = false;
                        if (pitch < -10)
-                           headDown = 1;
+                           headDown = true;
                        else
-                           headDown = 0;
+                           headDown = false;
+                       if (roll > 5)
+                           headTiltLeft = true;
+                       else
+                           headTiltLeft = false;
+                       if (roll < -5)
+                           headTiltRight = true;
+                       else
+                           headTiltRight = false;
+                       if (yaw > 5)
+                           headTurnLeft = true;
+                       else
+                           headTurnLeft = false;
+                       if (yaw < -5)
+                           headTurnRight = true;
+                       else
+                           headTurnRight = false;
+
 				       //Console.WriteLine("Rotation: " + outPoseEulerAngles.roll + " " + outPoseEulerAngles.pitch + " " + outPoseEulerAngles.yaw);
                        PXCMFaceData.ExpressionsData edata = face.QueryExpressions();
                        // retrieve the expression information
                        PXCMFaceData.ExpressionsData.FaceExpressionResult smileScore;
-                      // PXCMFaceData.ExpressionsData.FaceExpressionResult eyesUpScore;
+                       PXCMFaceData.ExpressionsData.FaceExpressionResult eyesUpScore;
+                       PXCMFaceData.ExpressionsData.FaceExpressionResult eyesDownScore;
                        PXCMFaceData.ExpressionsData.FaceExpressionResult eyesTurnLeftScore;
+                       PXCMFaceData.ExpressionsData.FaceExpressionResult eyesTurnRightScore;
                        PXCMFaceData.ExpressionsData.FaceExpressionResult headTiltedLeftScore;
                        PXCMFaceData.ExpressionsData.FaceExpressionResult headTurnedLeftScore;
                       // PXCMFaceData.ExpressionsData.FaceExpressionResult headUpScore;
                        //PXCMFaceData.ExpressionsData.FaceExpressionResult headDownScore;
                        edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_SMILE, out smileScore);
-                       //edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_EYES_UP, out eyesUpScore);
+                       edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_EYES_UP, out eyesUpScore);
+                       edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_EYES_DOWN, out eyesDownScore);
                        edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_EYES_TURN_LEFT, out eyesTurnLeftScore);
+                       edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_EYES_TURN_RIGHT, out eyesTurnRightScore);
                        edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_HEAD_TILT_LEFT, out headTiltedLeftScore);
                        edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_HEAD_TURN_LEFT, out headTurnedLeftScore);
                       // edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_HEAD_UP, out headUpScore);
                        //edata.QueryExpression(PXCMFaceData.ExpressionsData.FaceExpression.EXPRESSION_HEAD_DOWN, out headDownScore);
                        smile = smileScore.intensity;
-                       // eyesUp = eyesUpScore.intensity;
+                       eyesUp = eyesUpScore.intensity;
+                       if (eyesUp == 100)
+                           eyeIsUp = true;
+                       else
+                           eyeIsUp = false;
+                       eyesDown = eyesDownScore.intensity;
+                       if (eyesDown == 100)
+                           eyeIsDown = true;
+                       else
+                           eyeIsDown = false;
+
                        eyesTurnLeft = eyesTurnLeftScore.intensity;
-                       headTiltLeft = headTiltedLeftScore.intensity;
-                       headTurnLeft= headTurnedLeftScore.intensity;
+                       eyesTurnRight = eyesTurnRightScore.intensity;
+                     //  headTiltLeft = headTiltedLeftScore.intensity;
+                      // headTurnLeft= headTurnedLeftScore.intensity;
                       // headUp = headUpScore.intensity;
                        //headDown = headDownScore.intensity;
                        PXCMCapture.Device device = senseManager.captureManager.device;
                        device.SetIVCAMAccuracy(PXCMCapture.Device.IVCAMAccuracy.IVCAM_ACCURACY_FINEST);
-                       eyeIsUP= CheckFaceExpression(edata, FaceExpression.EXPRESSION_EYES_UP, 15);
-                      
-                       headTiltLeftThreshold = CheckFaceExpression(edata, FaceExpression.EXPRESSION_HEAD_TILT_LEFT, 15);
+                      // eyeIsUP= CheckFaceExpression(edata, FaceExpression.EXPRESSION_EYES_UP, 15);
+                       if ((headTiltLeft | headTurnLeft) & headUp & (eyesTurnLeft == 100) & (!eyeIsDown))
+                           looksForward = true;
+
+                       else if ((headTiltRight | headTurnRight) & headUp & (eyesTurnRight == 100) & (!eyeIsDown))
+                           looksForward = true;
+
+                     
+                      /* else if (headTiltRight & (headDown|headUp) & (!headTurnRight) & (eyesTurnRight==100))
+                           looksForward = true;
+                       else if (headTiltLeft & (headDown|headUp) &  (!headTurnLeft) & (eyesTurnLeft == 100))
+                           looksForward = true;
+                       * */
+                       else
+                           looksForward = eyeIsUp;
+                     //  headTiltLeftThreshold = CheckFaceExpression(edata, FaceExpression.EXPRESSION_HEAD_TILT_LEFT, 15);
 
                        //csv mona
                       // var csv = new StringBuilder();
@@ -357,18 +409,28 @@ namespace FaceID
                 }
 
                  // Update UI elements
+
                 lblNumFacesDetected.Content = String.Format("Faces Detected: {0}", numFacesDetected);
                 lblUserId.Content = String.Format("User ID: {0}", userId);
                 lblDatabaseState.Content = String.Format("Database: {0}", dbState);
+                lblLooksForward.Content = string.Format("Looks forward: {0}", looksForward);
                 lblSmile.Content = string.Format("smiling:{0}", smile);
-               // lblExpression.Content = string.Format("Eyes Up: {0}", eyesUp);
+                lblEyesUp.Content = string.Format("Eyes Up: {0}", eyeIsUp);
+                lblEyesDown.Content = string.Format("Eyes Down: {0}", eyeIsDown);
                 lblEyesTurnLeft.Content = string.Format("Eyes turn left:{0}", eyesTurnLeft);
-                lblExpressionThreshold.Content = string.Format("Eyes UP W threshold:{0}", eyeIsUP);
-                lblHeadTilt.Content = string.Format("Head Tilted Left:{0}", headTiltLeft);
-                lblHeadThreshold.Content = string.Format("Head Tilted Left:{0}", headTiltLeftThreshold);
+                lblEyesTurnRight.Content = string.Format("Eyes turn right:{0}", eyesTurnRight);
+
+                //lblExpressionThreshold.Content = string.Format("Eyes UP W threshold:{0}", eyeIsUP);
+                
+                lblHeadTiltLeft.Content = string.Format("Head Tilted Left:{0}", headTiltLeft);
+                lblHeadTiltRight.Content = string.Format("Head Tilted Right:{0}", headTiltRight);
+
+                //lblHeadThreshold.Content = string.Format("Head Tilted Left:{0}", headTiltLeftThreshold);
                 lblHeadUp.Content = string.Format("Head Up:{0}", headUp);
                 lblHeadDown.Content = string.Format("Head Down:{0}", headDown);
                 lblHeadTurnedLeft.Content = string.Format("Head Turned Left:{0}", headTurnLeft);
+                lblHeadTurnedRight.Content = string.Format("Head Turned Right:{0}", headTurnRight);
+
                 lblYaw.Content = string.Format("Yaw: {0}", yaw);
                 lblPitch.Content = string.Format("Pitch: {0}", pitch);
                 lblRoll.Content = string.Format("Roll: {0}", roll);
